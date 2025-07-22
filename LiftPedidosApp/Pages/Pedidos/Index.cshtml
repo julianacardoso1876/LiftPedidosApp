@@ -1,0 +1,36 @@
+@page
+@model LiftPedidosApp.Pages.Pedidos.IndexModel
+@{
+    ViewData["Title"] = "Lista de Pedidos";
+}
+
+<h2>Pedidos</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Data</th>
+            <th>Valor Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pedido in Model.Pedidos)
+{
+    DateTime dataPedido;
+    bool dataValida = DateTime.TryParse(pedido.Data, out dataPedido);
+    <tr>
+        <td>@pedido.Id</td>
+        <td>@(Model.Clientes.TryGetValue(pedido.IdCliente, out var nome) ? nome : "Cliente não encontrado")</td>
+        <td>@(dataValida ? dataPedido.ToShortDateString() : "Data inválida")</td>
+        <td>@pedido.ValorTotal.ToString("C")</td>
+        <td><a asp-page="Detalhes" asp-route-id="@pedido.Id">Detalhes</a></td>
+    </tr>
+}
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-primary" asp-page="/Index">Voltar ao Início</a>

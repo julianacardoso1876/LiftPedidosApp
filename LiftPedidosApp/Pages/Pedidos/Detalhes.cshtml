@@ -1,0 +1,46 @@
+@page "{id:int}"
+@using LiftPedidosApp.Models
+@using System.Linq
+@model LiftPedidosApp.Pages.Pedidos.DetalhesModel
+@{
+    ViewData["Title"] = "Detalhes do Pedido";
+}
+
+<h2>Detalhes do Pedido @Model.Pedido?.Id</h2>
+
+<p><strong>Cliente:</strong> @Model.Cliente?.Nome</p>
+
+@{
+    DateTime dataPedido;
+    bool dataValida = DateTime.TryParse(Model.Pedido?.Data, out dataPedido);
+}
+
+<p><strong>Data:</strong> @(dataValida ? dataPedido.ToShortDateString() : "Data inválida")</p>
+
+<p><strong>Valor Total:</strong> @Model.Pedido?.ValorTotal.ToString("C")</p>
+
+<h3>Itens</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Valor Unitário</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Itens)
+        {
+            var produto = Model.Produtos.FirstOrDefault(p => p.Id == item.IdProduto);
+            <tr>
+                <td>@produto?.Nome</td>
+                <td>@item.Quantidade</td>
+                <td>@item.ValorUnitario.ToString("C")</td>
+                <td>@(item.ValorUnitario * item.Quantidade).ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-page="Index">Voltar</a>
